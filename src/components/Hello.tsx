@@ -1,11 +1,21 @@
 import * as React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { dispatchType } from "../redux";
+
+// import { callDispatch } from "../redux";
 export interface HelloProps {
   compiler: string;
   framework: string;
 }
 
 export const Hello = (props: HelloProps) => {
+  const dispatch = useDispatch<dispatchType>();
+  dispatch({
+    type: "SET_AUTHENTICATED",
+    payload: { userId: "aaaaaa" }
+  });
+
   return (
     <Router>
       <div>
