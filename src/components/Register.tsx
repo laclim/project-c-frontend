@@ -6,8 +6,13 @@ import { useHistory, useLocation, Link } from "react-router-dom";
 
 import { axiosInstance as axios } from "../axios/index";
 
-export const Login = () => {
-  const [state, setstate] = useState({ email: "", password: "" });
+export const Register = () => {
+  const [state, setstate] = useState({
+    email: "",
+    name: "",
+    password: "",
+    passwordConfirmation: ""
+  });
   const dispatch = useDispatch<dispatchType>();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,28 +27,23 @@ export const Login = () => {
   let location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } };
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     try {
-      const response = await axios.post("/login", {
+      const response = await axios.post("/register", {
         email: state.email,
-        password: state.password
+        name: state.name,
+        password: state.password,
+        passwordConfirmation: state.passwordConfirmation
       });
       if (response.status == 200) {
-        localStorage.at = response.data.token;
-        localStorage.rt = response.data.refreshToken;
-        dispatch({
-          type: "SET_AUTHENTICATED",
-          payload: { userId: response.data.userId }
-        });
-        axios.defaults.headers[
-          "Authorization"
-        ] = `Bearer ${response.data.token}`;
+        console.log("register completed");
         history.replace(from);
       }
     } catch (error) {
       console.log(error);
     }
   };
+  console.log(state);
   return (
     <form onSubmit={handleSubmit}>
       <label>
@@ -56,6 +56,15 @@ export const Login = () => {
         />
       </label>
       <label>
+        name:
+        <input
+          type="text"
+          name="name"
+          value={state.name}
+          onChange={handleChange}
+        />
+      </label>
+      <label>
         password:
         <input
           type="password"
@@ -64,8 +73,16 @@ export const Login = () => {
           onChange={handleChange}
         />
       </label>
-      <input type="submit" value="Login" onClick={handleLogin} />
-      <Link to="/register">sign up</Link>
+      <label>
+        confirm password:
+        <input
+          type="password"
+          name="passwordConfirmation"
+          value={state.passwordConfirmation}
+          onChange={handleChange}
+        />
+      </label>
+      <input type="submit" value="Register" onClick={handleRegister} />
     </form>
   );
 };
